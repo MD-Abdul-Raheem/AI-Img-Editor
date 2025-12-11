@@ -1,0 +1,58 @@
+
+# Abstract: Gemini AI Image Editor
+
+## 1. Executive Summary
+The **Gemini AI Image Editor** is a sophisticated single-page web application designed to democratize professional image manipulation. Leveraging Google's **Gemini 2.5 Flash Image** model, the system interprets natural language instructions to perform complex pixel-level edits. By bridging the gap between human intent and machine vision, the application allows users to modify visuals—ranging from standard photography to PDF documents—through simple conversational prompts, eliminating the learning curve associated with traditional editing software.
+
+## 2. Technical Specifications
+
+### Frontend Architecture
+*   **Framework**: React 19 (Functional Components, Hooks)
+*   **Language**: TypeScript (v5.x) for strict type safety and interface definitions.
+*   **Styling**: Tailwind CSS (Utility-first architecture with custom configuration for animations and theming).
+*   **Build System**: ES Module based.
+
+### AI Integration
+*   **SDK**: Google GenAI SDK (`@google/genai`).
+*   **Models**:
+    *   `gemini-2.5-flash-image`: Primary engine for multimodal generation and image-to-image transformation.
+    *   `gemini-2.5-flash`: Auxiliary engine for semantic image analysis and context-aware prompt generation.
+
+### Utilities
+*   **Lucide React**: Consistent vector iconography.
+*   **UUID**: Cryptographically strong unique identifiers for state management.
+
+## 3. Core Capabilities
+
+*   **Natural Language Processing**: Translates user text (e.g., "Change the background to a sunset") into visual execution.
+*   **Intelligent Suggestion Engine**: Automatically analyzes uploaded content to generate context-specific, professional editing suggestions (e.g., suggesting "color grading" for cinematic shots).
+*   **Non-Destructive Editing History**: Implements a robust state machine with Undo/Redo functionality, maintaining a stack of image versions for iterative workflow.
+*   **Cross-Format Compatibility**: Supports processing of standard raster images (PNG, JPEG, WebP) and PDF documents.
+*   **Iterative Refinement**: Allows users to use the output of one generation cycle as the input for the next ("Chain of Thought" editing).
+
+## 4. System Architecture & Data Flow
+
+### Data Lifecycle
+1.  **Ingestion**: Client-side `FileReader` converts user uploads into Base64-encoded Data URIs.
+2.  **Analysis**: The application asynchronously polls the `gemini-2.5-flash` model with a JSON-enforced schema to retrieve relevant editing suggestions.
+3.  **Execution**:
+    *   User prompts are combined with image data and sent to the `gemini-2.5-flash-image` model.
+    *   System instructions explicitly force visual output to prevent text-only regression.
+4.  **Presentation**: The returned binary blob is rendered immediately in a comparison view, and the state tree is updated.
+
+### State Management
+*   **History Stack**: A linear array managing the timeline of edits.
+*   **View States**: Finite states (`IDLE`, `UPLOADING`, `PROCESSING`, `VIEWING`) control the UI layout and feedback loops.
+
+## 5. UI/UX Design Philosophy
+
+The interface adheres to a **"Black & Shine"** design system, prioritizing focus and precision.
+
+*   **Aesthetics**: A high-contrast monochrome palette (Pure Black / Zinc / White) minimizes distraction, mimicking professional creative suites.
+*   **Feedback**: Micro-interactions, including glow effects and loading states, provide immediate tactile feedback.
+*   **Responsiveness**: A fluid layout engine adapts seamlessly from desktop workstations to mobile viewports, utilizing collapsible sidebars and touch-optimized controls.
+
+## 6. Deployment & Configuration
+
+*   **Authentication**: Securely managed via environment variables (`process.env.API_KEY`).
+*   **Environment**: Browser-based execution with zero backend dependencies for image processing (Client-to-API architecture).
